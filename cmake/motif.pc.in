@@ -1,0 +1,11 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+libdir=${prefix}/@CMAKE_INSTALL_LIBDIR@
+includedir=${prefix}/@CMAKE_INSTALL_INCLUDEDIR@
+
+Name: Motif
+Description: Motif GUI Toolkit (C++ rewrite)
+Version: @PROJECT_VERSION@
+Requires: x11
+Libs: -L${libdir} -lmotif
+Cflags: -I${includedir}

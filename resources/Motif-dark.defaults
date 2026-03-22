@@ -1,0 +1,22 @@
+! Motif C++ Toolkit - Dark Theme Resources
+! Load with: XENVIRONMENT=Motif-dark.defaults your_app
+
+*background:            #2D2D2D
+*foreground:            #E0E0E0
+*topShadowColor:        #404040
+*bottomShadowColor:     #1A1A1A
+*selectColor:           #4A90D9
+*highlightColor:        #4A90D9
+
+*fontList:              Sans-11
+
+*XmText.background:     #1E1E1E
+*XmText.foreground:     #D4D4D4
+*XmTextField.background: #1E1E1E
+*XmTextField.foreground: #D4D4D4
+
+*XmList.background:     #252525
+*XmList.foreground:     #CCCCCC
+
+*XmPushButton.background: #383838
+*XmMenuBar.background:  #333333

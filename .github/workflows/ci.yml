@@ -1,0 +1,182 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, ubuntu-24.04]
+        compiler: [gcc, clang]
+        build_type: [Debug, Release]
+        include:
+          - compiler: gcc
+            cc: gcc
+            cxx: g++
+          - compiler: clang
+            cc: clang
+            cxx: clang++
+
+    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.os }} / ${{ matrix.compiler }} / ${{ matrix.build_type }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential cmake pkg-config \
+            libx11-dev libxpm-dev libxft-dev libfontconfig1-dev \
+            libxt-dev libxext-dev
+
+      - name: Configure
+        env:
+          CC: ${{ matrix.cc }}
+          CXX: ${{ matrix.cxx }}
+        run: |
+          cmake -B build \
+            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+            -DMOTIF_BUILD_TESTS=ON \
+            -DMOTIF_BUILD_EXAMPLES=ON \
+            -DMOTIF_BUILD_MRM=ON \
+            -DMOTIF_BUILD_UIL=ON \
+            -DMOTIF_BUILD_WM=ON \
+            -DMOTIF_USE_XFT=ON
+
+      - name: Build
+        run: cmake --build build --parallel $(nproc)
+
+      - name: Run tests
+        working-directory: build
+        run: ctest --output-on-failure --timeout 60
+        # Tests that need a display will be skipped gracefully
+
+  static-analysis:
+    runs-on: ubuntu-24.04
+    name: Static Analysis
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential cmake pkg-config \
+            libx11-dev libxpm-dev libxft-dev libfontconfig1-dev \
+            clang-tidy cppcheck
+
+      - name: Configure with clang-tidy
+        env:
+          CC: clang
+          CXX: clang++
+        run: |
+          cmake -B build \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+            -DMOTIF_BUILD_TESTS=OFF \
+            -DMOTIF_BUILD_EXAMPLES=OFF
+
+      - name: Run clang-tidy
+        run: |
+          find src include -name '*.cpp' -o -name '*.h' | head -50 | \
+          xargs clang-tidy -p build \
+            --checks='-*,bugprone-*,performance-*,readability-braces-around-statements,modernize-use-override,modernize-use-nullptr' \
+            --warnings-as-errors='' \
+            2>&1 | tee clang-tidy-report.txt
+          echo "clang-tidy completed"
+
+      - name: Run cppcheck
+        run: |
+          cppcheck --project=build/compile_commands.json \
+            --enable=warning,performance,portability \
+            --suppress=missingInclude \
+            --suppress=unmatchedSuppression \
+            --error-exitcode=0 \
+            --inline-suppr \
+            2>&1 | tee cppcheck-report.txt
+
+      - name: Upload analysis reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: static-analysis-reports
+          path: |
+            clang-tidy-report.txt
+            cppcheck-report.txt
+
+  install-test:
+    runs-on: ubuntu-22.04
+    name: Install & pkg-config Test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential cmake pkg-config \
+            libx11-dev libxpm-dev libxft-dev libfontconfig1-dev
+
+      - name: Build and install
+        run: |
+          cmake -B build -DCMAKE_INSTALL_PREFIX=$HOME/motif-install \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DMOTIF_BUILD_TESTS=OFF -DMOTIF_BUILD_EXAMPLES=OFF
+          cmake --build build --parallel $(nproc)
+          cmake --install build
+
+      - name: Verify installation
+        run: |
+          # Check installed headers
+          test -f $HOME/motif-install/include/motif/Xm.h
+          test -f $HOME/motif-install/include/motif/Version.h
+          test -f $HOME/motif-install/include/motif/core/Application.h
+
+          # Check library
+          test -f $HOME/motif-install/lib/libmotif.so || \
+          test -f $HOME/motif-install/lib/libmotif.a
+
+          # Check CMake config
+          test -f $HOME/motif-install/lib/cmake/Motif/MotifConfig.cmake
+
+          # Check pkg-config
+          export PKG_CONFIG_PATH=$HOME/motif-install/lib/pkgconfig
+          pkg-config --exists motif
+          pkg-config --cflags motif
+          pkg-config --libs motif
+
+          echo "Installation verification passed"
+
+      - name: Test find_package from external project
+        run: |
+          mkdir -p /tmp/test-project
+          cat > /tmp/test-project/CMakeLists.txt << 'EOF'
+          cmake_minimum_required(VERSION 3.20)
+          project(MotifTest CXX)
+          find_package(Motif REQUIRED)
+          add_executable(test_app main.cpp)
+          target_link_libraries(test_app PRIVATE Motif::motif)
+          EOF
+
+          cat > /tmp/test-project/main.cpp << 'EOF'
+          #include <motif/Version.h>
+          #include <motif/core/Application.h>
+          int main() {
+              static_assert(motif::Version::major == 3);
+              return 0;
+          }
+          EOF
+
+          cmake -B /tmp/test-project/build -S /tmp/test-project \
+            -DCMAKE_PREFIX_PATH=$HOME/motif-install
+          cmake --build /tmp/test-project/build
+          echo "External project build test passed"

@@ -1,0 +1,44 @@
+! Motif C++ Toolkit - Default Application Resources
+! These are loaded as fallback defaults for all Motif applications.
+
+! ── Global Defaults ──────────────────────────────────────────
+*background:            #E0E0E0
+*foreground:            #1A1A1A
+*fontList:              Sans-11
+*shadowThickness:       2
+*highlightThickness:    1
+*borderWidth:           0
+
+! ── Button Defaults ──────────────────────────────────────────
+*XmPushButton.shadowThickness:  2
+*XmPushButton.marginWidth:      8
+*XmPushButton.marginHeight:     4
+
+*XmToggleButton.spacing:        4
+*XmToggleButton.indicatorSize:  15
+
+! ── Text Widgets ─────────────────────────────────────────────
+*XmText.background:             white
+*XmText.foreground:             black
+*XmTextField.background:        white
+*XmTextField.foreground:        black
+
+! ── List Widget ──────────────────────────────────────────────
+*XmList.background:             white
+*XmList.foreground:             black
+
+! ── Menu Defaults ────────────────────────────────────────────
+*XmMenuBar.shadowThickness:     1
+*XmCascadeButton.marginWidth:   10
+*XmCascadeButton.marginHeight:  4
+
+! ── Dialog Defaults ──────────────────────────────────────────
+*XmMessageBox.marginWidth:      12
+*XmMessageBox.marginHeight:     12
+
+! ── Scale Widget ─────────────────────────────────────────────
+*XmScale.highlightThickness:    2
+*XmScale.shadowThickness:       2
+
+! ── Scrollbar ────────────────────────────────────────────────
+*XmScrollBar.width:             16

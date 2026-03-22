@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\usr\\\\bin\\\\ls.exe\" -la \"C:\\\\Users\\\\ishong\\\\motif\\\\legacy\"\")",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\usr\\\\bin\\\\ls.exe\" -la C:Usersishongmotiflegacy)",
+      "Bash(/c/Windows/System32/cmd.exe /c \"mkdir c:\\\\Users\\\\ishong\\\\motif\\\\legacy\")",
+      "Bash(/c/Windows/System32/cmd.exe /c \"dir c:\\\\Users\\\\ishong\\\\motif\\\\legacy\")",
+      "Bash(/c/Windows/System32/cmd.exe /c \"dir c:\\\\Users\\\\ishong\\\\motif\\\\lib\")",
+      "Bash(/c/Windows/System32/cmd.exe /c \"cd c:\\\\Users\\\\ishong\\\\motif && dir /b lib 2>&1 && echo --- && dir /b legacy 2>&1\")",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\usr\\\\bin\\\\mkdir.exe\" -p /c/Users/ishong/motif/legacy)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\bin\\\\git.exe\" -C \"C:\\\\Users\\\\ishong\\\\motif\" mv clients legacy/clients)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\bin\\\\git.exe\" -C \"C:\\\\Users\\\\ishong\\\\motif\" mv demos legacy/demos)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\bin\\\\git.exe\" -C \"C:\\\\Users\\\\ishong\\\\motif\" mv tools legacy/tools)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\bin\\\\git.exe\" -C \"C:\\\\Users\\\\ishong\\\\motif\" mv doc legacy/doc)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\bin\\\\git.exe\" -C \"C:\\\\Users\\\\ishong\\\\motif\" mv localized legacy/localized)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\bin\\\\git.exe\" -C \"C:\\\\Users\\\\ishong\\\\motif\" mv configure legacy/configure)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\bin\\\\git.exe\" -C \"C:\\\\Users\\\\ishong\\\\motif\" mv configure.ac legacy/configure.ac)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\bin\\\\git.exe\" -C \"C:\\\\Users\\\\ishong\\\\motif\" mv Makefile.am legacy/Makefile.am)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\bin\\\\git.exe\" -C \"C:\\\\Users\\\\ishong\\\\motif\" mv Makefile.in legacy/Makefile.in)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\bin\\\\git.exe\" -C \"C:\\\\Users\\\\ishong\\\\motif\" mv Makefile.imake-pure legacy/Makefile.imake-pure)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\usr\\\\bin\\\\mkdir.exe\" -p /c/Users/ishong/motif/legacy/include)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\bin\\\\git.exe\" -C \"C:\\\\Users\\\\ishong\\\\motif\" mv include/Dt legacy/include/Dt)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\bin\\\\git.exe\" -C \"C:\\\\Users\\\\ishong\\\\motif\" mv include/Makefile.am legacy/include/Makefile.am)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\bin\\\\git.exe\" -C \"C:\\\\Users\\\\ishong\\\\motif\" mv include/Makefile.in legacy/include/Makefile.in)",
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\bin\\\\git.exe\" -C \"C:\\\\Users\\\\ishong\\\\motif\" mv include/config.h.in legacy/include/config.h.in)"
+    ]
+  }
+}
